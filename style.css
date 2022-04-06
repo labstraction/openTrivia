@@ -1,3 +1,7 @@
 .question-text{
     color: rebeccapurple;
 }
+
+.super-button:hover{
+    border: 2px solid red !important;
+}

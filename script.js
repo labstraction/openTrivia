@@ -1,13 +1,69 @@
 
+function loadCategories(){
+    fetch('https://opentdb.com/api_category.php')
+    .then(resp => resp.json())
+    .then((data) => createSelect(data.trivia_categories, 'categories-select'))
+    .catch(err => console.log(err));
+}
+
+function loadDifficulty(){
+    fetch('./assets/settings/difficulty.json')
+    .then(resp => resp.json())
+    .then((data) => createSelect(data, 'difficulty-select'))
+    .catch(err => console.log(err));
+}
+
+function loadType(){
+    fetch('./assets/settings/type.json')
+    .then(resp => resp.json())
+    .then((data) => createSelect(data, 'type-select'))
+    .catch(err => console.log(err));
+}
+
+function initQuiz(){
+    loadCategories();
+    loadDifficulty();
+    loadType();
+}
+
+
+function createSelect(data, selectId) {
+    const select = document.getElementById(selectId);
+    for (const element of data) {
+        const option = document.createElement('option');
+        option.value = element.id;
+        const textNode = document.createTextNode(element.name);
+        option.appendChild(textNode);
+        select.appendChild(option);
+    }
+}
+
+
+
 
 function loadTrivia() {
-    fetch('https://opentdb.com/api.php?amount=15')
+    let category = document.getElementById('categories-select').value;
+    let difficulty = document.getElementById('difficulty-select').value;
+    let type = document.getElementById('type-select').value;
+
+    let stringUrl = 'https://opentdb.com/api.php?amount=15';
+    if (category) {
+        stringUrl += ("&category=" + category)
+    }
+    if (difficulty) {
+        stringUrl += ("&difficulty=" + difficulty)
+    }
+    if (type) {
+        stringUrl += ("&type=" + type)
+    }
+    fetch(stringUrl)
         .then(resp => resp.json())
         .then(createTrivias)
         .catch(err => console.log(err));
 }
 
 function createTrivias(data) {
+
     const results = data.results;
     const triviaArray = [];
 
@@ -22,6 +78,8 @@ function createTrivias(data) {
 
 function displayTrivia(triviaArray){
     const list = document.getElementById('trivia-list');
+
+    list.innerHTML = "";
 
     for (const trivia of triviaArray) {
         let liElement = createTriviaListElement(trivia)
@@ -38,6 +96,17 @@ function displayTrivia(triviaArray){
     // const title2 = document.querySelector('.main-title');
 
     // const li = document.querySelector('li');
+
+
+    const allChildren = list.children;
+
+    const arrayOfChildren = [...allChildren];
+
+    const arrayOfLi = arrayOfChildren.filter(c => c.tagName === 'LI');
+
+    for (let i = 0; i < arrayOfLi.length; i++) {
+        console.log(arrayOfLi[i]);
+    }
     
 }
 

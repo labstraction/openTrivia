@@ -19,6 +19,15 @@ class Trivia {
     return shuffledArray;
   }
 
+  checkAnswer(answer){
+    if(answer === this.correctAnswer){
+      return 1;
+    }
+    else {
+      return 0;
+    }
+  }
+
 
 }
 
